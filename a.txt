@@ -1,3 +1,0 @@
-<h1>hello guys</h1>
-<a href="https://www.mzitu.com/">click me</a>
-<img src="https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1257676888,1881296369&fm=26&gp=0.jpg" />
