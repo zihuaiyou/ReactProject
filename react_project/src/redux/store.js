@@ -2,7 +2,7 @@
 import {createStore,applyMiddleware,combineReducers} from 'redux';
 
 //引入为组件服务的reducer
-import testReducer from './reducers/test1';
+import loginReducer from './reducers/login';
 
 //引入thunk
 import thunk from "redux-thunk";
@@ -11,7 +11,7 @@ import thunk from "redux-thunk";
 import {composeWithDevTools} from 'redux-devtools-extension'
 
 //合并reducer
-const allreducer = combineReducers({test:testReducer})
+const allreducer = combineReducers({userInfo:loginReducer})
 
 //创建store对象;
 export default createStore(allreducer,composeWithDevTools(applyMiddleware(thunk)));

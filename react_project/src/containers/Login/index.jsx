@@ -3,8 +3,9 @@ import "./css/login.less";
 import logo from "./image/商品.png";
 import { Form, Input, Button, message } from "antd";
 import { connect } from "react-redux";
-import { createTest1Acion, createTest2Acion } from "../../redux/actions/test";
+import { createLoginAcion} from "../../redux/actions/login";
 import { reqLogin } from "../../api";
+import {Redirect} from 'react-router-dom'
 const { Item } = Form;
 
 //这是UI组件
@@ -12,10 +13,16 @@ class Login extends Component {
   // onFinish：统一校验，提交表单且数据验证成功后回调事件
   onFinish = async (values) => {
     console.log("Success:", values);
-    this.props.test1("React");
     let result = await reqLogin(values);
     const { data, status, msg } = result;
-    if (status === 0) console.log(data);
+    if (status === 0) {
+      //向admin页面传递登录信息
+      this.props.handleUserInfo(data);
+      console.log(data);
+      
+      //输入账户密码后跳转admin页面
+      this.props.history.replace('/admin')
+    }
     else message.error(msg);
   };
 
@@ -38,6 +45,11 @@ class Login extends Component {
   };
 
   render() {
+    const {isLogin} = this.props;
+    //如果已经登录了,则直接跳转admin页面
+    if (isLogin) {
+      return <Redirect to = './admin'/>
+    }
     return (
       <div className="login">
         <header>
@@ -115,9 +127,8 @@ class Login extends Component {
 
 //这是容器组件
 export default connect(
-  (state) => ({ testResult: state.test }), //映射状态
+  (state) => ({ isLogin: state.userInfo.isLogin }), //映射状态
   {
-    test1: createTest1Acion,
-    test2: createTest2Acion,
+    handleUserInfo: createLoginAcion,
   }
 )(Login);
