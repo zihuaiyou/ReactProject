@@ -114,7 +114,7 @@ class Login extends Component {
               }}
             >
               <Button type="primary" htmlType="submit" className="login-button">
-                Submit
+                登录
               </Button>
             </Item>
           </Form>
