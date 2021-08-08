@@ -7,4 +7,5 @@ import {BASE_URL} from '../config'
 //axios的post请求默认将数据转化为json发送给服务器
     //也可以使用queryString库的qs.stringify({username,password})将json转化成urlencoded形式
 export const reqLogin = (values) => instance.post(`${BASE_URL}/login`, values);
+export const reqCategoryList = () => instance.get(`${BASE_URL}/manage/category/list`);
 

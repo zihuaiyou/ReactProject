@@ -18,7 +18,6 @@ class Login extends Component {
     if (status === 0) {
       //向admin页面传递登录信息
       this.props.handleUserInfo(data);
-      console.log(data);
       
       //输入账户密码后跳转admin页面
       this.props.history.replace('/admin')
