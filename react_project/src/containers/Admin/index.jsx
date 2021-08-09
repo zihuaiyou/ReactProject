@@ -14,13 +14,11 @@ import Role from "./Role";
 import Bar from "./Bar";
 import Pie from "./Pie";
 import Line from "./Line";
+import LeftNav from './LeftNav';
 
 const { Footer, Sider, Content } = Layout;
 
 class Admin extends Component {
-  componentDidMount() {
-    console.log(this.props.userInfo);
-  }
   getCategoryList = async () => {
     let result = await reqCategoryList();
     console.log(result);
@@ -32,7 +30,9 @@ class Admin extends Component {
     }
     return (
       <Layout className="admin">
-        <Sider className="sider">Sider</Sider>
+        <Sider className="sider">
+        <LeftNav/>
+        </Sider>
         <Layout>
           <Header />
           <Content className="content">

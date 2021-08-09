@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./css/login.less";
-import logo from "./image/商品.png";
+import logo from "../../static/image/商品.png";
 import { Form, Input, Button, message } from "antd";
 import { connect } from "react-redux";
 import { createLoginAcion} from "../../redux/actions/login";
