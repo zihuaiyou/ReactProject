@@ -36,10 +36,11 @@ class LeftNav extends Component {
   render() {
     return (
       <div>
-        <header className="leftNav-header">
+        <Link to = '/admin/home'><header className="leftNav-header">
           <img src={logo} alt="商标" />
           <h1>商品管理系统</h1>
-        </header>
+        </header></Link>
+        
         <Menu
           //根据拿到的路径判断当前选中的是哪一个路由
           defaultSelectedKeys={[this.props.location.pathname.split('/').reverse()[0]]}

@@ -3,3 +3,5 @@
 export const BASE_URL = "";
 //天气URL
 export const WEATHER_URL = 'https://www.tianqiapi.com/api?version=v1&appid=21375891&appsecret=fTYv7v5E&city=北京';
+
+export const PAGE_SIZE = 5;

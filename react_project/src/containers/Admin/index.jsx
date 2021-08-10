@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect, Switch, Route } from "react-router-dom";
 import { createDeleteUserInfoAcion } from "../../redux/actions/login";
-import { reqCategoryList } from "../../api";
 import { Layout } from "antd";
 import "./css/admin.less";
 import Header from "./Header";
@@ -19,10 +18,7 @@ import LeftNav from './LeftNav';
 const { Footer, Sider, Content } = Layout;
 
 class Admin extends Component {
-  getCategoryList = async () => {
-    let result = await reqCategoryList();
-    console.log(result);
-  };
+  
   render() {
     const { isLogin } = this.props.userInfo;
     if (!isLogin) {

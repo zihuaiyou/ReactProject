@@ -13,4 +13,6 @@ export const reqLogin = (values) => instance.post(`${BASE_URL}/login`, values);
 export const reqCategoryList = () => instance.get(`${BASE_URL}/manage/category/list`);
 //天气接口请求
 export const reqWeather = () => instance.get(`${WEATHER_URL}`)
+//增加商品分类请求
+export const reqAddCategoryList = (categoryName) => instance.post(`${BASE_URL}/manage/category/add`, {categoryName})
 

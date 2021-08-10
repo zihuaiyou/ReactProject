@@ -3,9 +3,11 @@ import "./css/login.less";
 import logo from "../../static/image/商品.png";
 import { Form, Input, Button, message } from "antd";
 import { connect } from "react-redux";
-import { createLoginAcion} from "../../redux/actions/login";
+import { createLoginAcion } from "../../redux/actions/login";
 import { reqLogin } from "../../api";
-import {Redirect} from 'react-router-dom'
+import { Redirect } from "react-router-dom";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
 const { Item } = Form;
 
 //这是UI组件
@@ -18,11 +20,10 @@ class Login extends Component {
     if (status === 0) {
       //向admin页面传递登录信息
       this.props.handleUserInfo(data);
-      
+
       //输入账户密码后跳转admin页面
-      this.props.history.replace('/admin')
-    }
-    else message.error(msg);
+      this.props.history.replace("/admin");
+    } else message.error(msg);
   };
 
   // 统一校验，提交表单且数据验证失败后回调事件
@@ -44,10 +45,10 @@ class Login extends Component {
   };
 
   render() {
-    const {isLogin} = this.props;
+    const { isLogin } = this.props;
     //如果已经登录了,则直接跳转admin页面
     if (isLogin) {
-      return <Redirect to = './admin'/>
+      return <Redirect to="./admin" />;
     }
     return (
       <div className="login">
@@ -61,21 +62,11 @@ class Login extends Component {
           onFinishFailed：统一校验，提交表单且数据验证失败后回调事件 */}
           <Form
             name="basic"
-            labelCol={{
-              span: 6,
-            }}
-            wrapperCol={{
-              span: 18,
-            }}
-            initialValues={{
-              remember: true,
-            }}
             onFinish={this.onFinish}
             onFinishFailed={this.onFinishFailed}
           >
             {/* 用户名的声明式验证 */}
             <Item
-              label="用户名"
               name="username"
               rules={[
                 {
@@ -96,23 +87,17 @@ class Login extends Component {
                 },
               ]}
             >
-              <Input />
+              <Input placeholder="用户名" prefix={<UserOutlined />} />
             </Item>
 
             {/* 密码的自定义验证 */}
             <Item
-              label="密码"
               name="password"
               rules={[{ validator: this.passwordvalidator }]}
             >
-              <Input.Password />
+              <Input.Password placeholder="密码" prefix={<LockOutlined />} />
             </Item>
-            <Item
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}
-            >
+            <Item>
               <Button type="primary" htmlType="submit" className="login-button">
                 登录
               </Button>

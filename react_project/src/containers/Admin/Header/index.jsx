@@ -78,7 +78,7 @@ class Header extends Component {
       <header className="header">
         <div className="header-top">
           <span>欢迎登录,&nbsp;{this.props.username}</span>
-          <Button className="logout" onClick={this.logout}>
+          <Button className="logout" onClick={this.logout} type = "primary">
             <LoginOutlined />
             退出登录
           </Button>
