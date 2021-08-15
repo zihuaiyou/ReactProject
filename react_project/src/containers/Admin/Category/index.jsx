@@ -1,17 +1,23 @@
 import React, { Component } from "react";
 import { Button, Card, Table, message, Modal, Form, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { reqCategoryList, reqAddCategoryList } from "../../../api";
+import {
+  reqCategoryList,
+  reqAddCategoryList,
+  reqUpdateCategoryList,
+} from "../../../api";
 import { PAGE_SIZE } from "../../../config";
 
 const { Item } = Form;
 
 export default class Category extends Component {
   state = {
-    categoryList: [],
-    visible: false,
-    operationTpye: "",
-    isLoading: true,
+    categoryList: [], //商品分类列表
+    visible: false, //modal框是否可见
+    operationTpye: "", //修改分类或添加分类
+    isLoading: true, //是否在加载中
+    categoryId: "", //商品分类id
+    categoryName: "", //商品分类名 ---用于数据回显
   };
 
   //React.createRef()创建容器
@@ -31,23 +37,46 @@ export default class Category extends Component {
 
   //显示添加商品模态框的回调
   showAddModal = () => {
-    this.setState({ visible: true, operationTpye: "add" });
+    this.setState(
+      { visible: true, operationTpye: "add", categoryName: "" },
+      //setState第二个可选的回调会在render后调用
+      //这个回调强制刷新表单,更新表单initialValue
+      () => this.formRef.current.resetFields()
+    );
   };
 
   //显示修改商品模态框的回调
-  showUpdateModal = () => {
-    this.setState({ visible: true, operationTpye: "update" });
+  showUpdateModal = (item) => {
+    const { _id, name } = item;
+    //实现数据回显
+    this.setState(
+      {
+        visible: true,
+        operationTpye: "update",
+        categoryName: name,
+        categoryId: _id,
+      },
+      () => {
+        //重置表单
+        this.formRef.current.resetFields();
+      }
+    );
   };
 
   //处理点击模态框确认按钮的回调
   handleOk = async () => {
     try {
+      let { categoryName } = await this.formRef.current.validateFields();
       if (this.state.operationTpye === "add") {
-        let { categoryName } = await this.formRef.current.validateFields();
         this.handleToAdd(categoryName);
+      } else {
+        const { categoryId } = this.state;
+        console.log(categoryName, categoryId);
+
+        this.handleToupdate(categoryId, categoryName);
       }
     } catch (error) {
-      message.error("数据输入有误请检查");
+      message.warn("数据输入有误请检查");
     }
   };
 
@@ -59,9 +88,19 @@ export default class Category extends Component {
       this.getCategoryList();
       this.setState({ visible: false });
       this.formRef.current.resetFields();
-    } else {
-      message.error(msg);
-    }
+    } else message.error(msg);
+  };
+
+  //处理修改商品分类名的回调
+  handleToupdate = async (id, name) => {
+    let result = await reqUpdateCategoryList(id, name);
+    const { status, msg } = result;
+    if (status === 0) {
+      message.success("更新商品分类名成功");
+      this.getCategoryList();
+      this.setState({ visible: false });
+      this.formRef.current.resetFields();
+    } else message.error(msg);
   };
 
   //处理点击模态框取消按钮的回调
@@ -80,13 +119,13 @@ export default class Category extends Component {
       },
       {
         title: "操作",
-        dataIndex: "do",
+        // dataIndex: "do",
         key: "do",
         align: "center",
         width: "25%",
-        render: (a) => {
+        render: (item) => {
           return (
-            <Button type="link" onClick={this.showUpdateModal}>
+            <Button type="link" onClick={() => this.showUpdateModal(item)}>
               修改分类
             </Button>
           );
@@ -109,10 +148,9 @@ export default class Category extends Component {
             columns={columns}
             bordered
             rowKey={"_id"}
-            pagination={{ pageSize: PAGE_SIZE }}
+            pagination={{ pageSize: PAGE_SIZE, showQuickJumper: true }}
             loading={this.state.isLoading}
           />
-          ;
         </Card>
         <Modal
           title={this.state.operationTpye === "add" ? "添加分类" : "修改分类"}
@@ -124,10 +162,8 @@ export default class Category extends Component {
         >
           <Form
             name="basic"
-            initialValues={{
-              remember: true,
-            }}
             ref={this.formRef}
+            initialValues={{ categoryName: this.state.categoryName }}
           >
             <Item
               name="categoryName"
