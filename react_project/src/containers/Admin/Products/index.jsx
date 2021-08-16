@@ -130,8 +130,22 @@ export default class Products extends Component {
         render: () => {
           return (
             <div>
-              <Button type="link">详情</Button>
-              <Button type="link">修改</Button>
+              <Button
+                type="link"
+                onClick={() =>
+                  this.props.history.push("/admin/goods/products/detail")
+                }
+              >
+                详情
+              </Button>
+              <Button
+                type="link"
+                onClick={() =>
+                  this.props.history.push("/admin/goods/products/addupdate")
+                }
+              >
+                修改
+              </Button>
             </div>
           );
         },
@@ -166,7 +180,12 @@ export default class Products extends Component {
           </div>
         }
         extra={
-          <Button type="primary">
+          <Button
+            type="primary"
+            onClick={() =>
+              this.props.history.push("/admin/goods/products/addupdate")
+            }
+          >
             <PlusCircleOutlined />
             添加商品
           </Button>

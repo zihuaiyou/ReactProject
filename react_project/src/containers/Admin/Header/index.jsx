@@ -58,7 +58,10 @@ class Header extends Component {
   //显示标题的回调
   getTitle = (menu) => {
     let title = "";
-    let pathKey = this.props.location.pathname.split("/").reverse()[0];
+    const { pathname } = this.props.location;
+    let pathKey = pathname.split("/").reverse()[0];
+    //防止商品详情页刷新后标题丢失的问题;
+    if (pathname.indexOf("products")) pathKey = "products";
     menu.forEach((item) => {
       if (!item.children) {
         if (pathKey === item.key) title = item.title;
@@ -78,7 +81,7 @@ class Header extends Component {
       <header className="header">
         <div className="header-top">
           <span>欢迎登录,&nbsp;{this.props.username}</span>
-          <Button className="logout" onClick={this.logout} type = "primary">
+          <Button className="logout" onClick={this.logout} type="primary">
             <LoginOutlined />
             退出登录
           </Button>

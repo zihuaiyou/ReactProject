@@ -14,6 +14,8 @@ import Bar from "./Bar";
 import Pie from "./Pie";
 import Line from "./Line";
 import LeftNav from './LeftNav';
+import Detail from "./Products/Detail";
+import AddUpdate from "./Products/AddUpdate";
 
 const { Footer, Sider, Content } = Layout;
 
@@ -35,7 +37,11 @@ class Admin extends Component {
             <Switch>
               <Route path="/admin/home" component={Home} />
               <Route path="/admin/goods/category" component={Category} />
-              <Route path="/admin/goods/products" component={Products} />
+              <Route path="/admin/goods/products" component={Products} exact/>
+              <Route path="/admin/goods/products/detail/:id" component={Detail} />
+              <Route path="/admin/goods/products/detail" component={Detail} exact/>
+              <Route path="/admin/goods/products/addupdate" component={AddUpdate} exact/>
+              <Route path="/admin/goods/products/addupdate/:id" component={AddUpdate} />
               <Route path="/admin/user" component={User} />
               <Route path="/admin/role" component={Role} />
               <Route path="/admin/charts/bar" component={Bar} />
