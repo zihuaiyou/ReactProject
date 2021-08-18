@@ -7,10 +7,12 @@ import {
   reqUpdateCategoryList,
 } from "../../../api";
 import { PAGE_SIZE } from "../../../config";
+import { connect } from "react-redux";
+import { createCategoryNameAction } from "../../../redux/actions/category";
 
 const { Item } = Form;
 
-export default class Category extends Component {
+class Category extends Component {
   state = {
     categoryList: [], //商品分类列表
     visible: false, //modal框是否可见
@@ -31,8 +33,10 @@ export default class Category extends Component {
   getCategoryList = async () => {
     let result = await reqCategoryList();
     if (result.status !== 0) message.error(result.msg);
-    else
+    else {
       this.setState({ categoryList: result.data.reverse(), isLoading: false });
+      this.props.getCategoryInfo(result.data);
+    }
   };
 
   //显示添加商品模态框的回调
@@ -182,3 +186,7 @@ export default class Category extends Component {
     );
   }
 }
+
+export default connect((state) => ({}), { getCategoryInfo: createCategoryNameAction })(
+  Category
+);

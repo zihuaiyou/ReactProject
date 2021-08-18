@@ -33,3 +33,20 @@ export const reqSearchProductList = (pageNum, pageSize, searchType, keyword) => 
         [searchType]: keyword
     }
 });
+//商品详情的请求
+export const reqProductListById = (productId) => instance.get(`${BASE_URL}/manage/product/info`, { params: { productId } });
+//根据图片唯一名删除图片
+export const reqDeletePicture = name => (instance.post(`${BASE_URL}/manage/img/delete`, { name }))
+//新增商品信息
+export const reqAddProduct = productObj => (instance.post(`${BASE_URL}/manage/product/add`, { ...productObj }))
+//修改商品信息
+export const reqUpdateProduct = productObj => (instance.post(`${BASE_URL}/manage/product/update`, { ...productObj }))
+//获取角色列表请求
+export const reqRoleList = (pageNum, pageSize) => instance.get(`${BASE_URL}/manage/role/list`, {
+    params: {
+        pageNum,
+        pageSize
+    }
+});
+//添加角色
+export const reqAddRole = roleName => (instance.post(`${BASE_URL}/manage/role/add`, {roleName}));

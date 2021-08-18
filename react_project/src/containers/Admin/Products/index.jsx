@@ -7,10 +7,12 @@ import {
   reqSearchProductList,
 } from "../../../api";
 import { PAGE_SIZE } from "../../../config";
+import { connect } from "react-redux";
+import { createSaveProductInfoAction } from "../../../redux/actions/product";
 
 const { Option } = Select;
 
-export default class Products extends Component {
+class Products extends Component {
   state = {
     productList: [], //商品列表
     total: "", //商品总页数
@@ -44,6 +46,7 @@ export default class Products extends Component {
         total: data.total,
         current: data.pageNum,
       });
+      this.props.productDetail(data.list);
     } else message.error(msg);
   };
 
@@ -123,17 +126,19 @@ export default class Products extends Component {
       },
       {
         title: "操作",
-        dataIndex: "operation",
+        // dataIndex: "operation",
         key: "operation",
         align: "center",
         width: "10%",
-        render: () => {
+        render: (item) => {
           return (
             <div>
               <Button
                 type="link"
                 onClick={() =>
-                  this.props.history.push("/admin/goods/products/detail")
+                  this.props.history.push(
+                    `/admin/goods/products/detail/${item._id}`
+                  )
                 }
               >
                 详情
@@ -141,7 +146,7 @@ export default class Products extends Component {
               <Button
                 type="link"
                 onClick={() =>
-                  this.props.history.push("/admin/goods/products/addupdate")
+                  this.props.history.push(`/admin/goods/products/addupdate/${item._id}`)
                 }
               >
                 修改
@@ -208,3 +213,7 @@ export default class Products extends Component {
     );
   }
 }
+
+export default connect((state) => ({}), {
+  productDetail: createSaveProductInfoAction,
+})(Products);

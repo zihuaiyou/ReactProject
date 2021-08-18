@@ -39,7 +39,7 @@ class LeftNav extends Component {
   };
   render() {
     return (
-      <div>
+      <div style = {{position:"fixed",height:'100%'}}>
         <Link to="/admin/home">
           <header className="leftNav-header">
             <img src={logo} alt="商标" />
