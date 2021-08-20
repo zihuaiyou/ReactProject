@@ -49,4 +49,26 @@ export const reqRoleList = (pageNum, pageSize) => instance.get(`${BASE_URL}/mana
     }
 });
 //添加角色
-export const reqAddRole = roleName => (instance.post(`${BASE_URL}/manage/role/add`, {roleName}));
+export const reqAddRole = roleName => (instance.post(`${BASE_URL}/manage/role/add`, { roleName }));
+//分配权限
+export const reqSetPermission = (id, menus, authName) => (instance.post(`${BASE_URL}/manage/role/update`, {
+    _id: id,
+    menus,
+    auth_name: authName
+}))
+//分页显示用户列表
+export const reqUserList = () => (instance.get(`${BASE_URL}/manage/user/list`))
+
+//创建用户
+export const reqAddUser = ({ username, password, email, phone, role_id }) => (instance.post(`${BASE_URL}/manage/user/add`, {
+    username,
+    password,
+    email,
+    phone,
+    role_id
+}))
+
+//删除用户
+export const reqDeleteUser = (userId) => (instance.post(`${BASE_URL}/manage/user/delete`, { userId }))
+//修改用户
+export const reqUpdateUser = (user) => (instance.post(`${BASE_URL}/manage/user/update`, {...user}))

@@ -1,18 +1,23 @@
 import React, { Component } from "react";
-import { Button, Card, Table, Modal, Form, Input, message } from "antd";
+import { Button, Card, Table, Modal, Form, Input, message, Tree } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { PAGE_SIZE } from "../../../config";
-import { reqRoleList, reqAddRole } from "../../../api";
+import { reqRoleList, reqAddRole, reqSetPermission } from "../../../api";
+import menuList from "../../../config/menuConfig";
+import { connect } from "react-redux";
 
 const { Item } = Form;
 
-export default class Role extends Component {
+class Role extends Component {
   state = {
     addvisible: false,
     AuthVisable: false,
     current: 1,
     roleList: [],
     total: 0,
+    _id: "",
+    checkedKeys: [], //树形菜单选中的key
+    treeData: [], //树形菜单的数据
   };
 
   formRef = React.createRef();
@@ -20,6 +25,16 @@ export default class Role extends Component {
   componentDidMount() {
     const { current } = this.state;
     this.getRoleList(current, PAGE_SIZE);
+    let treeData = [
+      {
+        title: "平台权限",
+        key: "top",
+        children: [...menuList],
+      },
+    ];
+    this.setState({
+      treeData,
+    });
   }
   getRoleList = async (current, pagesize) => {
     let result = await reqRoleList(current, pagesize);
@@ -38,8 +53,17 @@ export default class Role extends Component {
   showAddModal = () => {
     this.setState({ visible: true });
   };
-  showSetPermissionModal = () => {
-    this.setState({ AuthVisable: true });
+  showSetPermissionModal = (id) => {
+    const { roleList } = this.state;
+    //回显菜单树
+    let menu = roleList.find((menu) => menu._id === id);
+    if (menu) {
+      let menus = menu.menus;
+      if (menus && menus instanceof Array) {
+        this.setState({ checkedKeys: menus });
+      }
+    }
+    this.setState({ AuthVisable: true, _id: id });
   };
   handleAddOk = async () => {
     try {
@@ -53,8 +77,18 @@ export default class Role extends Component {
   handleAddCancel = () => {
     this.setState({ visible: false });
   };
-  handleAuthOkModal = () => {
-    this.setState({ AuthVisable: false });
+  handleAuthOkModal = async () => {
+    const { _id, checkedKeys } = this.state;
+    const { authName } = this.props;
+    let result = await reqSetPermission(_id, checkedKeys, authName);
+    const { status, msg } = result;
+    if (status === 0) {
+      message.success("角色权限设置成功");
+      this.setState({ AuthVisable: false, checkedKeys: [] }, () => {
+        const { current } = this.state;
+        this.getRoleList(current, PAGE_SIZE);
+      });
+    } else message.error(msg);
   };
   handleAuthCancelModal = () => {
     this.setState({ AuthVisable: false });
@@ -68,7 +102,7 @@ export default class Role extends Component {
     } else message.error(msg);
   };
   handlePageChange = (pageNum) => {
-    this.getRoleList(pageNum,PAGE_SIZE);
+    this.getRoleList(pageNum, PAGE_SIZE);
   };
 
   columns = [
@@ -100,9 +134,12 @@ export default class Role extends Component {
       key: "operator",
       width: "25%",
       align: "center",
-      render: () => {
+      render: (item) => {
         return (
-          <Button type="link" onClick={this.showSetPermissionModal}>
+          <Button
+            type="link"
+            onClick={() => this.showSetPermissionModal(item._id)}
+          >
             设置权限
           </Button>
         );
@@ -166,9 +203,24 @@ export default class Role extends Component {
           okText="确认"
           cancelText="取消"
         >
-          此处为权限列表
+          <Form ref={this.authFormRef}>
+            <Tree
+              defaultExpandAll
+              checkable
+              onCheck={(checkedKeysValue) => {
+                this.setState({ checkedKeys: checkedKeysValue });
+              }}
+              checkedKeys={this.state.checkedKeys}
+              treeData={this.state.treeData}
+            />
+          </Form>
         </Modal>
       </div>
     );
   }
 }
+
+export default connect(
+  (state) => ({ authName: state.userInfo.user.userName }),
+  {}
+)(Role);
